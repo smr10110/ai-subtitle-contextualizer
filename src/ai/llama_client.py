@@ -72,7 +72,7 @@ class LlamaClient:
         except Exception as e:
             print(f"❌ Llama error: {e}")
             return None
-    
+
     def check_connection(self) -> bool:
         """
         Verify that Ollama is running and the model is available.
