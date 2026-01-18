@@ -26,8 +26,8 @@ class Config:
             load_dotenv(env_file)
             print(f"✅ Loaded environment from: {env_file}")
         else:
-            print(f"⚠️  No .env file found at: {env_file}")
-            print("   Create .env from .env.template to configure the app")
+            print(f"⚠️  No .env file found, using defaults")
+            print("   You can create .env to customize settings")
     
     @property
     def llama_model(self) -> str:
@@ -50,7 +50,7 @@ class Config:
         """Check if automatic processing is enabled."""
         auto_str = os.getenv("AUTO_PROCESS", "true")
         return auto_str.lower() in ("true", "1", "yes")
-    
+
     def validate(self) -> bool:
         """Validate configuration and show helpful error messages."""
         is_valid = True
