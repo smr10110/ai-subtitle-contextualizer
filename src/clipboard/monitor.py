@@ -12,7 +12,11 @@ from typing import Optional, Callable
 class ClipboardMonitor:
     """Monitors clipboard for new text content."""
     
-    def __init__(self, callback: Callable[[str], None], check_interval: float = 0.5):
+    def __init__(
+        self, 
+        callback: Callable[[str], None], 
+        check_interval: float = 0.5
+    ):
         """
         Initialize clipboard monitor.
         
