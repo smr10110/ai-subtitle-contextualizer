@@ -26,6 +26,10 @@ class OverlayWindow:
         self.text_widget: Optional[ctk.CTkTextbox] = None
         self.is_visible = False
         
+        # Window dimensions (single source of truth)
+        self.window_width = 500
+        self.window_height = 450
+        
         # Thread-safe queue for updates from other threads
         self.update_queue: queue.Queue = queue.Queue()
         
@@ -41,7 +45,7 @@ class OverlayWindow:
         self.window.title("AI Context")
         
         # Window properties
-        self.window.geometry("450x350")
+        self.window.geometry(f"{self.window_width}x{self.window_height}")
         self.window.attributes("-topmost", True)  # Always on top
         self.window.attributes("-alpha", self.config.overlay_opacity)
         
@@ -71,53 +75,27 @@ class OverlayWindow:
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
         
-        # Window dimensions
-        window_width = 450
-        window_height = 350
-        
         # Calculate position (bottom-right with some padding)
         padding = 20
-        x = screen_width - window_width - padding
-        y = screen_height - window_height - padding - 50  # Extra for taskbar
+        x = screen_width - self.window_width - padding
+        y = screen_height - self.window_height - padding - 50  # Extra for taskbar
         
-        self.window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        self.window.geometry(f"{self.window_width}x{self.window_height}+{x}+{y}")
     
     def _create_ui(self) -> None:
         """Create the UI components."""
-        # Main frame with padding
-        main_frame = ctk.CTkFrame(self.window, corner_radius=10)
-        main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        # Main frame without borders or padding
+        main_frame = ctk.CTkFrame(self.window, border_width=0)
+        main_frame.pack(fill="both", expand=True, padx=0, pady=0)
         
-        # Header with title and close button
-        header_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
-        header_frame.pack(fill="x", padx=10, pady=(10, 5))
-        
-        title_label = ctk.CTkLabel(
-            header_frame,
-            text="🤖 AI Context",
-            font=ctk.CTkFont(size=16, weight="bold")
-        )
-        title_label.pack(side="left")
-        
-        close_button = ctk.CTkButton(
-            header_frame,
-            text="✕",
-            width=30,
-            height=30,
-            command=self.hide,
-            fg_color="transparent",
-            hover_color="#555555"
-        )
-        close_button.pack(side="right")
-        
-        # Text display area
+        # Text display area (no header)
         self.text_widget = ctk.CTkTextbox(
             main_frame,
             wrap="word",
             font=ctk.CTkFont(size=14),
-            corner_radius=8
+            border_width=0
         )
-        self.text_widget.pack(fill="both", expand=True, padx=10, pady=10)
+        self.text_widget.pack(fill="both", expand=True, padx=5, pady=5)
         
         # Configure text tags for markdown rendering
         self._configure_text_tags()
